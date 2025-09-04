@@ -1,0 +1,63 @@
+# ---------------------------
+# Node & npm
+# ---------------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+package-lock.json.lock
+# (Keep package-lock.json itself tracked if you want deterministic builds)
+
+# ---------------------------
+# Build outputs
+# ---------------------------
+dist/
+build/
+coverage/
+.tmp/
+.temp/
+
+# ---------------------------
+# TypeScript
+# ---------------------------
+*.tsbuildinfo
+
+# ---------------------------
+# Prisma
+# ---------------------------
+# Prisma generates client in node_modules/@prisma/client by default
+# So nothing to ignore here, but ignore local sqlite dbs if used:
+*.db
+*.db-journal
+
+# ---------------------------
+# Environment variables
+# ---------------------------
+.env
+.env.*
+!.env.example
+
+# ---------------------------
+# IDE / OS
+# ---------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ---------------------------
+# Logs
+# ---------------------------
+logs
+*.log
+npm-debug.log*
+lerna-debug.log*
+
+# ---------------------------
+# Optional: Ignore individual package lockfiles inside workspaces
+# ---------------------------
+**/package-lock.json
+

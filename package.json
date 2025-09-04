@@ -1,0 +1,22 @@
+{
+    "name": "microservices-node-demo",
+    "private": true,
+    "workspaces": [
+        "common",
+        "services/*"
+    ],
+    "scripts": {
+        "build": "npm -ws run build",
+        "dev": "concurrently \"npm -w services/user-service run dev\" \"npm -w services/product-service run dev\" \"npm -w services/order-service run dev\" \"npm -w services/payment-service run dev\" \"npm -w services/notification-service run dev\"",
+        "start": "npm -ws run start",
+        "prisma:generate": "npm -w services/user-service run prisma:generate && npm -w services/product-service run prisma:generate && npm -w services/order-service run prisma:generate",
+        "format": "prettier -w ."
+    },
+    "devDependencies": {
+        "concurrently": "^9.0.0",
+        "prettier": "^3.3.3",
+        "@types/express": "^4.17.17",
+        "@types/cors": "^2.8.13",
+        "typescript": "^5.5.4"
+    }
+}
