@@ -1,0 +1,13 @@
+# dependencies
+node_modules
+# build outputs
+dist
+build
+coverage
+# Prisma generated files
+prisma/generated
+# logs
+*.log
+# environment files
+.env
+.env.*

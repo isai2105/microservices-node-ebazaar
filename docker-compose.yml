@@ -3,7 +3,7 @@ services:
     image: apache/kafka:3.9.1
     container_name: kafka
     ports:
-      - "9092:9092"
+      - '9092:9092'
     environment:
       # Enable KRaft mode
       KAFKA_PROCESS_ROLES: broker,controller
@@ -17,7 +17,7 @@ services:
 
       # Metadata quorum instead of Zookeeper
       KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
-      CLUSTER_ID: "kraft-cluster-12345" # must be unique and stable
+      CLUSTER_ID: 'kraft-cluster-12345' # must be unique and stable
 
       # Logging
       KAFKA_LOG_DIRS: /var/lib/kafka/data
@@ -31,18 +31,18 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_DB: app
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./prisma/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
       interval: 5s
       timeout: 5s
       retries: 10
   user-service:
     image: myorg/user-service:1.0.0
-    build: 
+    build:
       context: .
       dockerfile: services/user-service/Dockerfile
     environment:
@@ -55,10 +55,10 @@ services:
       - kafka
       - postgres
     ports:
-      - "3001:3000"
+      - '3001:3000'
   product-service:
     image: myorg/product-service:1.0.0
-    build: 
+    build:
       context: .
       dockerfile: services/product-service/Dockerfile
     environment:
@@ -70,10 +70,10 @@ services:
       - kafka
       - postgres
     ports:
-      - "3002:3000"
+      - '3002:3000'
   order-service:
     image: myorg/order-service:1.0.0
-    build: 
+    build:
       context: .
       dockerfile: services/order-service/Dockerfile
     environment:
@@ -86,10 +86,10 @@ services:
       - kafka
       - postgres
     ports:
-      - "3003:3000"
+      - '3003:3000'
   payment-service:
     image: myorg/payment-service:1.0.0
-    build: 
+    build:
       context: .
       dockerfile: services/payment-service/Dockerfile
     environment:
@@ -99,20 +99,20 @@ services:
     depends_on:
       - kafka
     ports:
-      - "3004:3000"
+      - '3004:3000'
   notification-service:
     image: myorg/notification-service:1.0.0
-    build: 
+    build:
       context: .
       dockerfile: services/notification-service/Dockerfile
     environment:
-    - PORT=3000
-    - KAFKA_BROKERS=kafka:9092
-    - KAFKA_CLIENT_ID=notification-service
+      - PORT=3000
+      - KAFKA_BROKERS=kafka:9092
+      - KAFKA_CLIENT_ID=notification-service
     depends_on:
       - kafka
     ports:
-      - "3005:3000"
+      - '3005:3000'
 
 volumes:
   kafka_data:

@@ -82,9 +82,9 @@ All services will run in separate containers, connected via Kafka and PostgreSQL
 
 ## 📝 Notes
 
-- **Prisma**: Each service uses its own Prisma schema and client.  
-- **Kafka**: Running in KRaft mode, no Zookeeper required.  
-- **Docker**: Services expose ports 3000–3004 by default. Adjust in `docker-compose.yml`.  
+- **Prisma**: Each service uses its own Prisma schema and client.
+- **Kafka**: Running in KRaft mode, no Zookeeper required.
+- **Docker**: Services expose ports 3000–3004 by default. Adjust in `docker-compose.yml`.
 - **Shared Code**: Use `common` workspace for utilities or cross-service logic.
 
 ---
@@ -101,4 +101,3 @@ This project is licensed under **Apache-2.0** — see the [LICENSE](https://gith
 - Implement **authentication across services** using JWT.
 - Add **OpenAPI / Swagger docs** for each service.
 - Extend Kafka with **multiple topics and consumers** for event-driven flows.
-
