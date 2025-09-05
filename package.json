@@ -10,6 +10,8 @@
     "dev": "concurrently \"npm -w services/user-service run dev\" \"npm -w services/product-service run dev\" \"npm -w services/order-service run dev\" \"npm -w services/payment-service run dev\" \"npm -w services/notification-service run dev\"",
     "start": "npm -ws run start",
     "prisma:generate": "npm -w services/user-service run prisma:generate && npm -w services/product-service run prisma:generate && npm -w services/order-service run prisma:generate",
+    "commit": "bash scripts/commit.sh",
+    "push": "git push",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "format:check": "prettier --check .",

@@ -34,6 +34,8 @@ microservices-node-demo/
 │  ├─ order-service/
 │  ├─ payment-service/
 │  └─ notification-service/
+├─ scripts/
+│  ├─ commit.sh.       # Tool commit changes using a standard process (npm run commit)
 ```
 
 ---
@@ -69,6 +71,14 @@ docker compose up --build
 
 All services will run in separate containers, connected via Kafka and PostgreSQL.
 
+5. **Commit any changes**
+
+First, manually add any changes to git
+
+```bash
+npm run commit
+```
+
 ---
 
 ## 🛠️ Available Scripts
@@ -77,6 +87,10 @@ All services will run in separate containers, connected via Kafka and PostgreSQL
 - `npm run lint` – Run ESLint across all services.
 - `npm run format` – Format code with Prettier.
 - `npx prisma db push` – Push Prisma schema to the database.
+- `npm run validate` – Runs ESlint code validation and prettier format check.
+- `npm run fix` – Runs ESlint to fix any linting issues and Prettier to fix any format issues.
+- `npm run commit` – Runs custom commit.sh script to keep commit messages in an standard style & process.
+- `npm run push` – Runs 'git push'.
 
 ---
 
