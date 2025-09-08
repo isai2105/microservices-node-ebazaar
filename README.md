@@ -40,6 +40,16 @@ microservices-node-demo/
 
 ---
 
+## 🟢 Service Startup & Health Checks  
+
+This project uses a **“wait-for-it”** pattern together with Docker Compose health checks to make sure dependent services are fully ready before each microservice starts:
+
+- **PostgreSQL** and **Kafka** containers expose health checks so Docker Compose can mark them as healthy.
+- Each microservice runs a small startup script (via [`wait-for-it.sh`](https://github.com/vishnubob/wait-for-it)) that blocks until its dependencies (for example Postgres on port 5432 or Kafka on port 9092) are reachable before running its main process.
+- This prevents “connection refused” errors at startup and ensures a predictable boot sequence.
+
+---
+
 ## ⚡ Getting Started
 
 1. **Clone the repo**

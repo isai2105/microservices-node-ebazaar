@@ -1,6 +1,6 @@
 FROM node:18-alpine
 
-# Install OpenSSL for Prisma
+# Install OpenSSL for Prisma, Bash shell
 RUN apk add --no-cache openssl bash
 
 WORKDIR /app
@@ -12,6 +12,14 @@ COPY services/order-service ./services/order-service
 
 # Install all dependencies including dev for TS build
 RUN npm install 
+
+WORKDIR /app/scripts
+# Copy the 'wait-for-it' script
+COPY scripts/wait-for-it.sh /usr/local/bin/wait-for-it
+RUN chmod +x /usr/local/bin/wait-for-it
+# Copy the 'wait-for-services' script
+COPY scripts/wait-for-services.sh ./
+RUN chmod +x /app/scripts/wait-for-services.sh
 
 # Build common/dist
 WORKDIR /app/common
