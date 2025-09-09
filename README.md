@@ -40,7 +40,7 @@ microservices-node-demo/
 
 ---
 
-## 🟢 Service Startup & Health Checks  
+## 🟢 Service Startup & Health Checks
 
 This project uses a **“wait-for-it”** pattern together with Docker Compose health checks to make sure dependent services are fully ready before each microservice starts:
 
@@ -73,10 +73,10 @@ cp .env.example .env
 npm install
 ```
 
-4. **Run with Docker Compose**
+4. **Run with npm 'start:services' script**
 
 ```bash
-docker compose up --build
+npm run start:services (dev/prod param, defaults to dev)
 ```
 
 All services will run in separate containers, connected via Kafka and PostgreSQL.
@@ -101,6 +101,7 @@ npm run commit
 - `npm run fix` – Runs ESlint to fix any linting issues and Prettier to fix any format issues.
 - `npm run commit` – Runs custom commit.sh script to keep commit messages in an standard style & process.
 - `npm run push` – Runs 'git push'.
+- `npm run start:services` – Runs 'sh scripts/startup.sh'. Use 'dev' / 'prod' params (if missing, default to 'dev').
 
 ---
 

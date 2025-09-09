@@ -2,6 +2,8 @@ services:
   kafka:
     image: apache/kafka:3.9.1
     container_name: kafka
+    networks:
+      - app-network
     ports:
       - '9092:9092'
     environment:
@@ -24,7 +26,11 @@ services:
     volumes:
       - kafka_data:/var/lib/kafka/data
     healthcheck:
-      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list"]
+      test:
+        [
+          'CMD-SHELL',
+          '/opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list',
+        ]
       interval: 300s
       timeout: 5s
       retries: 5
@@ -32,12 +38,14 @@ services:
 
   postgres:
     image: postgres:16
+    networks:
+      - app-network
+    ports:
+      - '5432:5432'
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
       POSTGRES_DB: app
-    ports:
-      - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./prisma/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
@@ -48,6 +56,10 @@ services:
       retries: 10
   user-service:
     image: myorg/user-service:1.0.0
+    networks:
+      - app-network
+    ports:
+      - '3001:3000'
     build:
       context: .
       dockerfile: services/user-service/Dockerfile
@@ -60,10 +72,12 @@ services:
     depends_on:
       - kafka
       - postgres
-    ports:
-      - '3001:3000'
   product-service:
     image: myorg/product-service:1.0.0
+    networks:
+      - app-network
+    ports:
+      - '3002:3000'
     build:
       context: .
       dockerfile: services/product-service/Dockerfile
@@ -75,10 +89,12 @@ services:
     depends_on:
       - kafka
       - postgres
-    ports:
-      - '3002:3000'
   order-service:
     image: myorg/order-service:1.0.0
+    networks:
+      - app-network
+    ports:
+      - '3003:3000'
     build:
       context: .
       dockerfile: services/order-service/Dockerfile
@@ -91,10 +107,12 @@ services:
     depends_on:
       - kafka
       - postgres
-    ports:
-      - '3003:3000'
   payment-service:
     image: myorg/payment-service:1.0.0
+    networks:
+      - app-network
+    ports:
+      - '3004:3000'
     build:
       context: .
       dockerfile: services/payment-service/Dockerfile
@@ -104,10 +122,12 @@ services:
       - KAFKA_CLIENT_ID=payment-service
     depends_on:
       - kafka
-    ports:
-      - '3004:3000'
   notification-service:
     image: myorg/notification-service:1.0.0
+    networks:
+      - app-network
+    ports:
+      - '3005:3000'
     build:
       context: .
       dockerfile: services/notification-service/Dockerfile
@@ -117,9 +137,11 @@ services:
       - KAFKA_CLIENT_ID=notification-service
     depends_on:
       - kafka
-    ports:
-      - '3005:3000'
 
 volumes:
   kafka_data:
   postgres_data:
+
+networks:
+  app-network:
+    driver: bridge
