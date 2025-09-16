@@ -61,11 +61,22 @@ cd microservices-node-ebazaar
 
 2. **Set up environment variables**
 
-Copy `.env.example` to `.env` and fill in your credentials:
+Copy the example environment files to actual .env files:
 
 ```bash
+# Root global variables
 cp .env.example .env
+
+# Shared variables for all services
+cp .env.shared.example .env.shared
+
+# Service-specific variables
+for SERVICE in user-service product-service order-service payment-service notification-service; do
+  cp services/$SERVICE/.env.example services/$SERVICE/.env
+done
 ```
+
+Then edit the .env\* files to fill in credentials, ports, and other configuration values for your environment.
 
 3. **Install dependencies**
 

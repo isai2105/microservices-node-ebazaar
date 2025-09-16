@@ -5,26 +5,19 @@ services:
     networks:
       - app-network
     ports:
-      - '9092:9092'
+      - '${KAFKA_SERVICE_PORT}:9092'
     environment:
-      # Enable KRaft mode
       KAFKA_PROCESS_ROLES: broker,controller
-      KAFKA_NODE_ID: 1
-
-      # Internal cluster communication
-      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_NODE_ID: ${KAFKA_NODE_ID}
+      KAFKA_LISTENERS: 'PLAINTEXT://:${KAFKA_PORT},CONTROLLER://:${KAFKA_CONTROLLER_PORT}'
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka:${KAFKA_PORT}'
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-
-      # Metadata quorum instead of Zookeeper
-      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
-      CLUSTER_ID: 'kraft-cluster-12345' # must be unique and stable
-
-      # Logging
-      KAFKA_LOG_DIRS: /var/lib/kafka/data
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka:${KAFKA_CONTROLLER_PORT}'
+      CLUSTER_ID: '${KAFKA_CLUSTER_ID}'
+      KAFKA_LOG_DIRS: ${KAFKA_LOG_DIRS}
     volumes:
-      - kafka_data:/var/lib/kafka/data
+      - kafka_data:${KAFKA_LOG_DIRS}
     healthcheck:
       test:
         [
@@ -41,16 +34,16 @@ services:
     networks:
       - app-network
     ports:
-      - '5432:5432'
+      - '${DB_PORT}:5432'
     environment:
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_DB: app
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./prisma/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ${POSTGRES_INIT_SCRIPT}:/docker-entrypoint-initdb.d/init.sql:ro
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER}']
       interval: 5s
       timeout: 5s
       retries: 10
@@ -59,7 +52,10 @@ services:
     networks:
       - app-network
     ports:
-      - '3001:3000'
+      - '${USER_SERVICE_PORT}:3000'
+    env_file:
+      - .env.shared
+      - services/user-service/.env
     build:
       context: .
       dockerfile: Dockerfile
@@ -69,11 +65,7 @@ services:
     environment:
       - SERVICE_NAME=user-service
       - SKIP_PRISMA=false
-      - PORT=3000
-      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/app?schema=users
-      - JWT_SECRET=devsecret
-      - KAFKA_BROKERS=kafka:9092
-      - KAFKA_CLIENT_ID=user-service
+      - DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?schema=users
     depends_on:
       - kafka
       - postgres
@@ -82,7 +74,10 @@ services:
     networks:
       - app-network
     ports:
-      - '3002:3000'
+      - '${PRODUCT_SERVICE_PORT}:3000'
+    env_file:
+      - .env.shared
+      - services/product-service/.env
     build:
       context: .
       dockerfile: Dockerfile
@@ -92,10 +87,7 @@ services:
     environment:
       - SERVICE_NAME=product-service
       - SKIP_PRISMA=false
-      - PORT=3000
-      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/app?schema=products
-      - KAFKA_BROKERS=kafka:9092
-      - KAFKA_CLIENT_ID=product-service
+      - DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?schema=products
     depends_on:
       - kafka
       - postgres
@@ -104,7 +96,10 @@ services:
     networks:
       - app-network
     ports:
-      - '3003:3000'
+      - '${ORDER_SERVICE_PORT}:3000'
+    env_file:
+      - .env.shared
+      - services/order-service/.env
     build:
       context: .
       dockerfile: Dockerfile
@@ -114,11 +109,7 @@ services:
     environment:
       - SERVICE_NAME=order-service
       - SKIP_PRISMA=false
-      - PORT=3000
-      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/app?schema=orders
-      - KAFKA_BROKERS=kafka:9092
-      - KAFKA_CLIENT_ID=order-service
-      - JWT_SECRET=devsecret
+      - DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?schema=orders
     depends_on:
       - kafka
       - postgres
@@ -127,7 +118,10 @@ services:
     networks:
       - app-network
     ports:
-      - '3004:3000'
+      - '${PAYMENT_SERVICE_PORT}:3000'
+    env_file:
+      - .env.shared
+      - services/payment-service/.env
     build:
       context: .
       dockerfile: Dockerfile
@@ -137,9 +131,6 @@ services:
     environment:
       - SERVICE_NAME=payment-service
       - SKIP_PRISMA=true
-      - PORT=3000
-      - KAFKA_BROKERS=kafka:9092
-      - KAFKA_CLIENT_ID=payment-service
     depends_on:
       - kafka
   notification-service:
@@ -147,7 +138,10 @@ services:
     networks:
       - app-network
     ports:
-      - '3005:3000'
+      - '${NOTIFICATION_SERVICE_PORT}:3000'
+    env_file:
+      - .env.shared
+      - services/notification-service/.env
     build:
       context: .
       dockerfile: Dockerfile
@@ -157,9 +151,6 @@ services:
     environment:
       - SERVICE_NAME=notification-service
       - SKIP_PRISMA=true
-      - PORT=3000
-      - KAFKA_BROKERS=kafka:9092
-      - KAFKA_CLIENT_ID=notification-service
     depends_on:
       - kafka
 
