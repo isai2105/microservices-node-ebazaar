@@ -76,10 +76,18 @@ npm install
 4. **Run with npm 'start:services' script**
 
 ```bash
-npm run start:services (dev/prod param, defaults to dev)
-```
+# Start services in development mode (default)
+npm run start:services
 
-All services will run in separate containers, connected via Kafka and PostgreSQL.
+# Explicitly start services in development mode
+npm run start:services:dev
+
+# Start services in development mode with debug enabled
+npm run start:services:dev:debug
+
+# Start services in production mode
+npm run start:services:prod
+```
 
 5. **Commit any changes**
 
@@ -101,7 +109,154 @@ npm run commit
 - `npm run fix` – Runs ESlint to fix any linting issues and Prettier to fix any format issues.
 - `npm run commit` – Runs custom commit.sh script to keep commit messages in an standard style & process.
 - `npm run push` – Runs 'git push'.
-- `npm run start:services` – Runs 'sh scripts/startup.sh'. Use 'dev' / 'prod' params (if missing, default to 'dev').
+- `npm run start:services` – Runs `sh scripts/startup.sh`. Default environment is `dev` if no parameter is provided.
+- `npm run start:services:dev` – Start all services in **development mode**.
+- `npm run start:services:dev:debug` – Start all services in **development mode with debugging enabled**.
+- `npm run start:services:prod` – Start all services in **production mode**.
+
+---
+
+## 💻 Debugging with VS Code
+
+You can configure VS Code to debug each microservice using a `launch.json` file in the `.vscode` folder.
+
+Example `launch.json` file:
+
+```
+{
+  "configurations": [
+
+    {
+      "name": "User Service",
+      "type": "node",
+      "request": "attach",
+      "port": 9229,
+      "address": "localhost",
+      "localRoot": "${workspaceFolder}",
+      "remoteRoot": "/app",
+      "outFiles": [
+        "${workspaceFolder}/**/dist/**/*.js"
+      ],
+      "sourceMaps": true,
+      "restart": true,
+      "timeout": 30000,
+      "trace": true
+    },
+    {
+      "name": "Product Service",
+      "type": "node",
+      "request": "attach",
+      "port": 9230,
+      "address": "localhost",
+      "localRoot": "${workspaceFolder}",
+      "remoteRoot": "/app",
+      "outFiles": [
+        "${workspaceFolder}/**/dist/**/*.js"
+      ],
+      "sourceMaps": true,
+      "restart": true,
+      "timeout": 30000,
+      "trace": true
+    },
+    {
+      "name": "Order Service",
+      "type": "node",
+      "request": "attach",
+      "port": 9231,
+      "address": "localhost",
+      "localRoot": "${workspaceFolder}",
+      "remoteRoot": "/app",
+      "outFiles": [
+        "${workspaceFolder}/**/dist/**/*.js"
+      ],
+      "skipFiles": [
+          "${workspaceFolder}/node_modules/**/*.js",
+          "${workspaceFolder}\\node_modules\\**\\*.js",
+          "<node_internals>/**/*.js",
+          "<node_internals>\\**\\*.js"
+      ],
+      "sourceMaps": true,
+      "restart": true,
+      "timeout": 30000,
+      "trace": true
+    },
+    {
+      "name": "Payment Service",
+      "type": "node",
+      "request": "attach",
+      "port": 9232,
+      "address": "localhost",
+      "localRoot": "${workspaceFolder}",
+      "remoteRoot": "/app",
+      "outFiles": [
+        "${workspaceFolder}/**/dist/**/*.js"
+      ],
+      "skipFiles": [
+          "${workspaceFolder}/node_modules/**/*.js",
+          "${workspaceFolder}\\node_modules\\**\\*.js",
+          "<node_internals>/**/*.js",
+          "<node_internals>\\**\\*.js"
+      ],
+      "sourceMaps": true,
+      "restart": true,
+      "timeout": 30000,
+      "trace": true
+    },
+    {
+      "name": "Notification Service",
+      "type": "node",
+      "request": "attach",
+      "port": 9233,
+      "address": "localhost",
+      "localRoot": "${workspaceFolder}",
+      "remoteRoot": "/app",
+      "outFiles": [
+        "${workspaceFolder}/**/dist/**/*.js"
+      ],
+      "skipFiles": [
+          "${workspaceFolder}/node_modules/**/*.js",
+          "${workspaceFolder}\\node_modules\\**\\*.js",
+          "<node_internals>/**/*.js",
+          "<node_internals>\\**\\*.js"
+      ],
+      "sourceMaps": true,
+      "restart": true,
+      "timeout": 30000,
+      "trace": true
+    },
+  ],
+  "compounds": [
+    {
+      "name": "Debug All Services",
+      "configurations": [
+        "User Service",
+        "Product Service",
+        "Order Service",
+        "Payment Service",
+        "Notification Service"
+      ]
+    }
+  ]
+}
+```
+
+---
+
+## 🧹 Cleaning Up Stale Docker Networks
+
+If you see an error like this when starting the stack:
+
+Error response from daemon: failed to set up container networking: network <id> not found
+
+it usually means Docker left behind an **unused network** from a previous run (for example after switching between `dev` and `prod` Compose files).
+
+To remove all unused (dangling) networks, run:
+
+```
+docker network prune -f
+```
+
+After pruning, simply start your containers again.
 
 ---
 

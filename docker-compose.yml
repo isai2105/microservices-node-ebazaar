@@ -62,8 +62,13 @@ services:
       - '3001:3000'
     build:
       context: .
-      dockerfile: services/user-service/Dockerfile
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: user-service
+        SKIP_PRISMA: false
     environment:
+      - SERVICE_NAME=user-service
+      - SKIP_PRISMA=false
       - PORT=3000
       - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/app?schema=users
       - JWT_SECRET=devsecret
@@ -80,8 +85,13 @@ services:
       - '3002:3000'
     build:
       context: .
-      dockerfile: services/product-service/Dockerfile
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: product-service
+        SKIP_PRISMA: false
     environment:
+      - SERVICE_NAME=product-service
+      - SKIP_PRISMA=false
       - PORT=3000
       - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/app?schema=products
       - KAFKA_BROKERS=kafka:9092
@@ -97,8 +107,13 @@ services:
       - '3003:3000'
     build:
       context: .
-      dockerfile: services/order-service/Dockerfile
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: order-service
+        SKIP_PRISMA: false
     environment:
+      - SERVICE_NAME=order-service
+      - SKIP_PRISMA=false
       - PORT=3000
       - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/app?schema=orders
       - KAFKA_BROKERS=kafka:9092
@@ -115,8 +130,13 @@ services:
       - '3004:3000'
     build:
       context: .
-      dockerfile: services/payment-service/Dockerfile
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: payment-service
+        SKIP_PRISMA: true
     environment:
+      - SERVICE_NAME=payment-service
+      - SKIP_PRISMA=true
       - PORT=3000
       - KAFKA_BROKERS=kafka:9092
       - KAFKA_CLIENT_ID=payment-service
@@ -130,8 +150,13 @@ services:
       - '3005:3000'
     build:
       context: .
-      dockerfile: services/notification-service/Dockerfile
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: notification-service
+        SKIP_PRISMA: true
     environment:
+      - SERVICE_NAME=notification-service
+      - SKIP_PRISMA=true
       - PORT=3000
       - KAFKA_BROKERS=kafka:9092
       - KAFKA_CLIENT_ID=notification-service

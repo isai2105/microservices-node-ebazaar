@@ -1,0 +1,41 @@
+FROM node:18-alpine
+
+# Accept service name as build argument
+ARG SERVICE_NAME
+
+# Install OpenSSL for Prisma, Bash shell
+RUN apk add --no-cache openssl bash
+
+WORKDIR /app
+
+# Copy base files
+COPY package*.json ./
+COPY tsconfig.base.json ./
+COPY common ./common
+
+# Copy only the requested service folder
+COPY services/${SERVICE_NAME} ./services/${SERVICE_NAME}
+
+# Install all dependencies including dev for TS build
+RUN npm install 
+
+WORKDIR /app/scripts
+# Copy the 'wait-for-it' script
+COPY scripts/wait-for-it.sh /usr/local/bin/wait-for-it
+RUN chmod +x /usr/local/bin/wait-for-it
+# Copy the 'wait-for-services' script
+COPY scripts/wait-for-services.sh ./
+RUN chmod +x /app/scripts/wait-for-services.sh
+# Copy the 'common service entrypoint' script
+COPY scripts/service-entrypoint.sh ./
+RUN chmod +x /app/scripts/service-entrypoint.sh
+
+# Generate wrapper entrypoint
+RUN echo '#!/bin/sh' > /app/entrypoint.sh && \
+    echo 'set -euo pipefail' >> /app/entrypoint.sh && \
+    echo "exec sh /app/services/${SERVICE_NAME}/entrypoint.sh \"\$@\"" >> /app/entrypoint.sh && \
+    chmod +x /app/entrypoint.sh
+
+EXPOSE 3000
+
+ENTRYPOINT ["/app/entrypoint.sh"]

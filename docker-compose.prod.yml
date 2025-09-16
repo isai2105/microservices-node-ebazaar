@@ -1,5 +1,1 @@
 # No services defined yet
-
-networks:
-  app-network:
-    external: true

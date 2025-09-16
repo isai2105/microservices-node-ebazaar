@@ -1,0 +1,54 @@
+services:
+  user-service:
+    environment:
+      - NODE_OPTIONS=--inspect=0.0.0.0:9229
+    command: node dist/index.js
+    ports:
+      - '9229:9229'
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+
+  product-service:
+    environment:
+      - NODE_OPTIONS=--inspect=0.0.0.0:9230
+    command: node dist/index.js
+    ports:
+      - '9230:9230'
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+
+  order-service:
+    environment:
+      - NODE_OPTIONS=--inspect=0.0.0.0:9231
+    command: node dist/index.js
+    ports:
+      - '9231:9231'
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+
+  payment-service:
+    environment:
+      - NODE_OPTIONS=--inspect=0.0.0.0:9232
+    command: node dist/index.js
+    ports:
+      - '9232:9232'
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+
+  notification-service:
+    environment:
+      - NODE_OPTIONS=--inspect=0.0.0.0:9233
+    command: node dist/index.js
+    ports:
+      - '9233:9233'
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+
+networks:
+  app-network:
+    driver: bridge

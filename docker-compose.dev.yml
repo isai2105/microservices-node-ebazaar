@@ -9,7 +9,3 @@ services:
       KAFKA_BROKERS: 'kafka:9092'
     depends_on:
       - kafka
-
-networks:
-  app-network:
-    external: true
