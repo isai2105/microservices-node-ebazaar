@@ -2,20 +2,13 @@
   "name": "product-service",
   "version": "1.0.0",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js",
     "prisma:generate": "prisma generate"
   },
   "dependencies": {
-    "@ebazaar/common": "*",
-    "cors": "^2.8.5",
-    "express": "^4.19.2",
-    "prisma": "^5.18.0",
-    "@prisma/client": "^5.18.0"
+    "@ebazaar/common": "*"
   },
   "devDependencies": {
-    "ts-node-dev": "^2.0.0",
-    "typescript": "^5.5.4"
   }
 }
