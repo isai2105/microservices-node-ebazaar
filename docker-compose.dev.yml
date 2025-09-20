@@ -9,3 +9,41 @@ services:
       KAFKA_BROKERS: 'kafka:9092'
     depends_on:
       - kafka
+  user-service:
+    volumes:
+      - ./services/user-service/src:/app/services/user-service/src
+      - ./services/user-service/dist:/app/services/user-service/dist
+      - ./services/user-service/prisma:/app/services/user-service/prisma
+      - ./common/src:/app/common/src
+      - ./common/dist:/app/common/dist
+      - /app/node_modules
+  product-service:
+    volumes:
+      - ./services/product-service/src:/app/services/product-service/src
+      - ./services/product-service/dist:/app/services/product-service/dist
+      - ./services/product-service/prisma:/app/services/product-service/prisma
+      - ./common/src:/app/common/src
+      - ./common/dist:/app/common/dist
+      - /app/node_modules
+  order-service:
+    volumes:
+      - ./services/order-service/src:/app/services/order-service/src
+      - ./services/order-service/dist:/app/services/order-service/dist
+      - ./services/order-service/prisma:/app/services/order-service/prisma
+      - ./common/src:/app/common/src
+      - ./common/dist:/app/common/dist
+      - /app/node_modules
+  payment-service:
+    volumes:
+      - ./services/payment-service/src:/app/services/payment-service/src
+      - ./services/payment-service/dist:/app/services/payment-service/dist
+      - ./common/src:/app/common/src
+      - ./common/dist:/app/common/dist
+      - /app/node_modules
+  notification-service:
+    volumes:
+      - ./services/notification-service/src:/app/services/notification-service/src
+      - ./services/notification-service/dist:/app/services/notification-service/dist
+      - ./common/src:/app/common/src
+      - ./common/dist:/app/common/dist
+      - /app/node_modules

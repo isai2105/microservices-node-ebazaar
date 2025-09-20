@@ -63,9 +63,10 @@ services:
         SERVICE_NAME: user-service
         SKIP_PRISMA: false
     environment:
-      - SERVICE_NAME=user-service
-      - SKIP_PRISMA=false
-      - DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?schema=users
+      NODE_ENV: ${NODE_ENV}
+      SERVICE_NAME: user-service
+      SKIP_PRISMA: 'false'
+      DATABASE_URL: postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?schema=users
     depends_on:
       - kafka
       - postgres
@@ -85,9 +86,10 @@ services:
         SERVICE_NAME: product-service
         SKIP_PRISMA: false
     environment:
-      - SERVICE_NAME=product-service
-      - SKIP_PRISMA=false
-      - DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?schema=products
+      NODE_ENV: ${NODE_ENV}
+      SERVICE_NAME: product-service
+      SKIP_PRISMA: 'false'
+      DATABASE_URL: postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?schema=products
     depends_on:
       - kafka
       - postgres
@@ -107,9 +109,10 @@ services:
         SERVICE_NAME: order-service
         SKIP_PRISMA: false
     environment:
-      - SERVICE_NAME=order-service
-      - SKIP_PRISMA=false
-      - DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?schema=orders
+      NODE_ENV: ${NODE_ENV}
+      SERVICE_NAME: order-service
+      SKIP_PRISMA: 'false'
+      DATABASE_URL: postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?schema=orders
     depends_on:
       - kafka
       - postgres
@@ -129,8 +132,9 @@ services:
         SERVICE_NAME: payment-service
         SKIP_PRISMA: true
     environment:
-      - SERVICE_NAME=payment-service
-      - SKIP_PRISMA=true
+      NODE_ENV: ${NODE_ENV}
+      SERVICE_NAME: payment-service
+      SKIP_PRISMA: 'true'
     depends_on:
       - kafka
   notification-service:
@@ -149,8 +153,9 @@ services:
         SERVICE_NAME: notification-service
         SKIP_PRISMA: true
     environment:
-      - SERVICE_NAME=notification-service
-      - SKIP_PRISMA=true
+      NODE_ENV: ${NODE_ENV}
+      SERVICE_NAME: notification-service
+      SKIP_PRISMA: 'true'
     depends_on:
       - kafka
 

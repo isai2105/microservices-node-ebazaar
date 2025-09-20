@@ -48,7 +48,3 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
-
-networks:
-  app-network:
-    driver: bridge
