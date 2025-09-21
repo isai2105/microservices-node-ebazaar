@@ -21,10 +21,6 @@ if [ "$MODE" = "prod" ]; then
     docker compose -f docker-compose.yml -f docker-compose.prod.yml up
 else
     if [ "$DEBUG" = "true" ] || [ "$DEBUG" = "debug" ]; then
-        
-        # -- Building the code locally, so we have the source files
-        # Build common workspace
-        npm run build --workspace common
 
         # Build each service by running npm run build inside its folder
         for service in services/*; do
