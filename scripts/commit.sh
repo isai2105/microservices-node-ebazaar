@@ -19,14 +19,35 @@ if [ -z "$(git status --porcelain)" ]; then
   exit 1
 fi
 
-# Run fixes and checks
-npm run fix
+# Check for staged changes
+if [ -z "$(git diff --cached --name-only)" ]; then
+  echo "❌ No staged changes to commit. Please stage your changes first."
+  exit 1
+fi
+
+# Run checks on the code (if fails, run 'npm run fix')
 npm run validate || {
-  echo "❌ Lint or format check failed. Please fix issues first."
+  echo "❌ Lint or format check failed. Please fix issues first (try 'npm run fix')."
   exit 1
 }
 
-# Ask for ticket number (optional)
+# --- Ask for commit type (mandatory) ---
+echo "Select commit type:"
+echo "1) Fix"
+echo "2) Chore"
+echo "3) Feat"
+
+while true; do
+  read -p "Enter option number (1-3): " type_choice
+  case "$type_choice" in
+    1) commit_type="Fix"; break ;;
+    2) commit_type="Chore"; break ;;
+    3) commit_type="Feat"; break ;;
+    *) echo "❌ Invalid choice. Please enter 1, 2, or 3." ;;
+  esac
+done
+
+# --- Ask for ticket number (optional) ---
 read -p "Ticket number (optional): " ticket
 
 # --- Commit title (mandatory) ---
@@ -51,17 +72,17 @@ if [ -z "$message" ]; then
 fi
 
 # --- BREAKING CHANGES message (optional) ---
-
 read -p "# Describe any BREAKING CHANGES (optional): " breaking
 
-# Compose commit type
-type="chore"
+# Compose commit type with optional ticket
 if [ -n "$ticket" ]; then
-  type="feat($ticket)"
+  type_with_ticket="$commit_type($ticket)"
+else
+  type_with_ticket="$commit_type"
 fi
 
 # Compose final commit message
-commit_msg="$type: $title"
+commit_msg="$type_with_ticket: $title"
 
 if [ -n "$message" ]; then
   commit_msg="$commit_msg
